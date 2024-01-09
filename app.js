@@ -13,7 +13,7 @@ app.get("/currenttime",function(req,res){//들어오는 요청에 대해 요청�
 });   //localhost:3000/currenttime
 
 app.get("/",function(req,res){
-    res.send('<form action="/store-user" method="POST"><label>Your Name</label><input type="text" name="username"><button>제출</button></form>')
+    res.send('<form action="/store-user" method="POST"><label>Your Name:</label><input type="text" name="username"><button>제출</button></form>')
 });  //localhost:3000/
 
 app.post("/store-user",function(req,res){ 
