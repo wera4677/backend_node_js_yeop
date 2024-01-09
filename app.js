@@ -1,21 +1,53 @@
-const http = require("http"); //http 패키지 (응답,요청 처리)
+const fs = require("fs");
+const path = require("path");
 
-function handleRequest(request, response) {//서버 생성 시 실행되는 함수
+const express = require("express"); //익스프레스 라이브러리 사용
 
-  if (request.url === "/currenttime") {//도메인+포트 의 뒷부분의 주소
-    //localhost:3000/currenttime
+const app = express(); //익스프레스 실행
 
-    response.statusCode = 200; //statusCode 는 요청이 성공했는지 여부를 알림
-    response.end('<h1>' + new Date().toISOString() +'</h1>'); //현재시각 응답
+app.use(express.urlencoded({extended:false})); //요청을 살펴보고 요청이 데이터를 가지고있고 찾는데이터라면 데이터를 구문분석해서 js객체로 변환시킨다.
 
-  } else if (request.url === "/") {//뒷주소가 / 일경우 실행
-    //localhost:3000/
+
+app.get("/currenttime",function(req,res){//들어오는 요청에 대해 요청핸들러 정의 (요청 처리) ,첫번째 매개변수:주소 두번째:실행되어야할 함수
+    res.send('<h1>' + new Date().toISOString() +'</h1>'); //응답을 보내는 메서드 
+});   //localhost:3000/currenttime
+
+app.get("/",function(req,res){
+    res.send('<form action="/store-user" method="POST"><label>Your Name</label><input type="text" name="username"><button>제출</button></form>')
+});  //localhost:3000/
+
+app.post("/store-user",function(req,res){ 
+    const userName = req.body.username;
+
+    const filePath = path.join(__dirname, "data", "users.json"); //경로
+
+    const fileData = fs.readFileSync(filePath);  //파일 읽기 
+    const existingUsers = JSON.parse(fileData);  //js객체 또는 배열로 변환 
+
+    existingUsers.push(userName); //해당 배열 또는 js객체에 새로운 항목을 추가 
     
-    response.statusCode = 200; //statusCode 는 요청이 성공했는지 여부를 알림
-    response.end("<h1>Hello world!</h1>"); //응답 준비 끝낸후 클라이언트에 데이터 보냄
-  }
-}
+    fs.writeFileSync(filePath, JSON.stringify(existingUsers)); //경로를 연결후 변경한 내용을 저장/ JSON.stringify() =>제이슨형식으로 변환
 
-const server = http.createServer(handleRequest); //웹서버 생성
+    res.send('<h1>이름 저장!!</h1>');
+});
 
-server.listen(3000); //테스트 포트번호 설정
+app.get("/users",function(req,res){ //json파일에 저장된 내용 보여줌
+    const filePath = path.join(__dirname, "data", "users.json"); //경로
+
+    const fileData = fs.readFileSync(filePath);  //파일 읽기 
+    const existingUsers = JSON.parse(fileData);  //js객체 또는 배열로 변환 
+    
+    let responseData = '<ul>';
+
+    for (const user of existingUsers) {
+        responseData += "<li>" + user + "</li>";
+    }
+    
+    responseData += "</ul>";
+
+    res.send(responseData);
+});
+
+app.listen(3000); //익스프레스 포트번호 설정
+
+
