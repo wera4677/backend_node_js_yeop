@@ -16,16 +16,16 @@
   </head>
   <body>
     <header id="main-header">
-      <div id="logo"><a href="index.html">Eatwell</a></div>
+      <div id="logo"><a href="/">Eatwell</a></div>
       <nav>
         <ul>
           <li class="nav-item">
-            <a href="restaurants.html">Browse Restaurants</a>
+            <a href="/restaurants">레스토랑 찾기</a>
           </li>
           <li class="nav-item">
-            <a href="recommend.html">Share a Restaurant</a>
+            <a href="/recommend">레스토랑 공유</a>
           </li>
-          <li class="nav-item"><a href="about.html">About Eatwell</a></li>
+          <li class="nav-item"><a href="/about">Eatwell 소개</a></li>
         </ul>
       </nav>
       <button id="drawer-btn">
@@ -38,28 +38,28 @@
       <nav>
         <ul>
           <li class="nav-item">
-            <a href="restaurants.html">Browse Restaurants</a>
+            <a href="/restaurants">Browse Restaurants</a>
           </li>
           <li class="nav-item">
-            <a href="recommend.html">Share a Restaurant</a>
+            <a href="/recommend">Share a Restaurant</a>
           </li>
-          <li class="nav-item"><a href="about.html">About Eatwell</a></li>
+          <li class="nav-item"><a href="/about">About Eatwell</a></li>
         </ul>
       </nav>
     </aside>
     <main>
-      <h1>Share your favorite restaurant!</h1>
-      <form>
+      <h1>좋은 레스토랑을 공유하세요!</h1>
+      <form action="/recommend" method="POST">
         <div class="form-control">
-          <label for="name">Restaurant name</label>
+          <label for="name">레스토랑 이름</label>
           <input type="text" id="name" name="name" required />
         </div>
         <div class="form-control">
-          <label for="address">Address</label>
+          <label for="address">주소</label>
           <input type="text" id="address" name="address" required />
         </div>
         <div class="form-control">
-          <label for="cuisine">Type of cuisine</label>
+          <label for="cuisine">요리 종류</label>
           <input
             type="text"
             id="cuisine"
@@ -69,11 +69,11 @@
           />
         </div>
         <div class="form-control">
-          <label for="website">Restaurant website</label>
+          <label for="website">레스토랑 웹사이트</label>
           <input type="url" id="website" name="website" />
         </div>
         <div class="form-control">
-          <label for="description">Why do you recommend it?</label>
+          <label for="description">왜 추천을 해주시나요?</label>
           <textarea
             name="description"
             id="description"
@@ -81,7 +81,7 @@
             required
           ></textarea>
         </div>
-        <button>Share Restaurant</button>
+        <button>레스토랑 공유하기</button>
       </form>
     </main>
   </body>

@@ -1,53 +1,53 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("fs"); 
+const path = require("path"); //경로
 
-const express = require("express"); //익스프레스 라이브러리 사용
+const express = require("express");
 
-const app = express(); //익스프레스 실행
+const app = express();
 
-app.use(express.urlencoded({extended:false})); //요청을 살펴보고 요청이 데이터를 가지고있고 찾는데이터라면 데이터를 구문분석해서 js객체로 변환시킨다.
+app.use(express.static("public")); //public 폴더의 파일을 요청이 들어오면 맞게 응답
+app.use(express.urlencoded({extended:false})); //들어온 요청을 구문분석(변환) 
 
 
-app.get("/currenttime",function(req,res){//들어오는 요청에 대해 요청핸들러 정의 (요청 처리) ,첫번째 매개변수:주소 두번째:실행되어야할 함수
-    res.send('<h1>' + new Date().toISOString() +'</h1>'); //응답을 보내는 메서드 
-});   //localhost:3000/currenttime
-
-app.get("/",function(req,res){
-    res.send('<form action="/store-user" method="POST"><label>Your Name:</label><input type="text" name="username"><button>제출</button></form>')
-});  //localhost:3000/
-
-app.post("/store-user",function(req,res){ 
-    const userName = req.body.username;
-
-    const filePath = path.join(__dirname, "data", "users.json"); //경로
-
-    const fileData = fs.readFileSync(filePath);  //파일 읽기 
-    const existingUsers = JSON.parse(fileData);  //js객체 또는 배열로 변환 
-
-    existingUsers.push(userName); //해당 배열 또는 js객체에 새로운 항목을 추가 
-    
-    fs.writeFileSync(filePath, JSON.stringify(existingUsers)); //경로를 연결후 변경한 내용을 저장/ JSON.stringify() =>제이슨형식으로 변환
-
-    res.send('<h1>이름 저장!!</h1>');
+app.get("/", function(req,res){
+    const indexHtml = path.join(__dirname,"views","index.html");
+    res.sendFile(indexHtml);
 });
 
-app.get("/users",function(req,res){ //json파일에 저장된 내용 보여줌
-    const filePath = path.join(__dirname, "data", "users.json"); //경로
-
-    const fileData = fs.readFileSync(filePath);  //파일 읽기 
-    const existingUsers = JSON.parse(fileData);  //js객체 또는 배열로 변환 
-    
-    let responseData = '<ul>';
-
-    for (const user of existingUsers) {
-        responseData += "<li>" + user + "</li>";
-    }
-    
-    responseData += "</ul>";
-
-    res.send(responseData);
+app.get("/restaurants", function(req,res){
+    const htmlFilePath = path.join(__dirname,"views","restaurants.html") //파일의 절대경로를 가져옴
+    res.sendFile(htmlFilePath) //응답으로 파일을 보냄
 });
 
-app.listen(3000); //익스프레스 포트번호 설정
+app.get("/recommend", function(req,res){
+    const recommendHtml = path.join(__dirname,"views","recommend.html");
+    res.sendFile(recommendHtml);
+});
+
+app.post("/recommend", function(req,res){
+    const restaurant = req.body; //전체적인 키를 json에 저장하기위해 지정
+    const filePath = path.join(__dirname,"data","restaurants.json"); //경로
+
+    const fileData = fs.readFileSync(filePath) //파일 읽기 
+    const storedRestaurants =JSON.parse(fileData); //파일 변환
+
+    storedRestaurants.push(restaurant) //데이터 추가 
+
+    fs.writeFileSync(filePath, JSON.stringify(storedRestaurants)); //다시 json파일 변환후 저장
+
+    res.redirect("/confirm") //응답으로 다른 페이지를 보내야한다 라는 뜻
+});
+
+app.get("/confirm",function(req,res){
+    const confirmHtml = path.join(__dirname,"views","confirm.html");
+    res.sendFile(confirmHtml);
+});
+
+app.get("/about",function(req,res){
+    const aboutHtml = path.join(__dirname,"views","about.html");
+    res.sendFile(aboutHtml);
+});
 
 
+
+app.listen(3000);

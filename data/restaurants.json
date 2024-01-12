@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Test",
+    "address": "Teststresst5,",
+    "cuisine": "ltalian",
+    "website": "https://awesome.com",
+    "description": "그냥"
+  },
+  {
+    "name": "Test2",
+    "address": "Teststresst 10, Testcity 2",
+    "cuisine": "Indian",
+    "website": "https://mygreattest.com",
+    "description": "좋아요~"
+  }
+]
