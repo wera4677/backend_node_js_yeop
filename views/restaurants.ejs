@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("includes/head") %>
+    <link rel="stylesheet" href="styles/restaurants.css" />
+  </head>
+  <body>
+    <%- include("includes/header") %>
+    <%- include("includes/aside") %>
+    <main>
+      <h1>추천 맛집</h1>
+      <% if (numberOfRestaurants === 0) { %>
+        <p>공유된 레스토랑이 없습니다. 레스토랑을 공유해주세요!</p>
+      <% } else { %>
+        <p>다른 사용자의 도움으로 좋아하는 레스토랑을 찾으세요!</p>
+        <p>결과 :<%= numberOfRestaurants %> 개의 레스토랑을 찾았습니다.</p>
+        <ul id="restaurants-list">
+        <% for(const restaurant of restaurants) { %>
+          <%- include("includes/restaurants/restaurant-item",{restaurant: restaurant }) %>
+        <% } %>
+        </ul>
+      <% } %>
+    </main>
+  </body>
+</html>

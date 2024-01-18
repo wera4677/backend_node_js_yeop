@@ -12,5 +12,12 @@
     "cuisine": "Indian",
     "website": "https://mygreattest.com",
     "description": "좋아요~"
+  },
+  {
+    "name": "restaurants 3",
+    "address": "Awesomestreet 5 ,Mycity",
+    "cuisine": "German",
+    "website": "https://awesome.com",
+    "description": "훌륭해요"
   }
 ]
