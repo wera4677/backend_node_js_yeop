@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path"); //경로
 
 const express = require("express");
+const uuid = require("uuid");
+
 
 const app = express();
 
@@ -27,12 +29,32 @@ app.get("/restaurants", function (req, res) {
   }); //매개변수 1 은 템플릿파일이름 , 2는 {ejs변수 키와 값 }
 });
 
+app.get("/restaurants/:id",function ( req, res) { //동적경로를 정의 / 도메인/restaurants/r1 을 방문하면 r1의값에 연결가능
+    const restaurantId = req.params.id; //사용자에 의해 입력된 id 
+    const filePath = path.join(__dirname, "data", "restaurants.json"); //경로
+
+    const fileData = fs.readFileSync(filePath); //파일 읽기
+    const storedRestaurants = JSON.parse(fileData); //파일 변환
+
+    for (const restaurant of  storedRestaurants ) {//json 에서 특정 데이터를 찾는다 
+        if (restaurant.id === restaurantId) {
+           return res.render("restaurant-detail",{ restaurant: restaurant }); //id 를 전달하기위해 사용
+        }
+    }
+
+    res.render("404");//경로를 찾지못할경우 404페이지 응답
+});
+
+
+
+
 app.get("/recommend", function (req, res) {
   res.render("recommend");
 });
 
 app.post("/recommend", function (req, res) {
   const restaurant = req.body; //전체적인 키를 json에 저장하기위해 지정
+  restaurant.id = uuid.v4();  
   const filePath = path.join(__dirname, "data", "restaurants.json"); //경로
 
   const fileData = fs.readFileSync(filePath); //파일 읽기
@@ -52,5 +74,13 @@ app.get("/confirm", function (req, res) {
 app.get("/about", function (req, res) {
   res.render("about");
 });
+
+app.use(function(req, res) { //다른 경로에서 처리되지않은 요청이 있을때마다 실행
+    res.render("404");
+}); //사용자입력 경로가 잘못된경우 404페이지 응답
+
+app.use(function(error, req, res, next){
+    res.render("500"); //서버측에 오류발생시 500페이지 응답
+})
 
 app.listen(3000);
