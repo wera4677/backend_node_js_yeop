@@ -8,11 +8,33 @@ const router = express.Router();
 
 
 router.get("/restaurants", function (req, res) {
+    let order =req.query.order; //레스토랑.ejs의 order을 가지고온다
+    let nextOrder = "desc";
+
+    if (order !== "asc" && order !== "desc"){
+        order ="asc";
+    }
+
+    if (order === "desc"){
+        nextOrder ="asc";
+    }
+
     const storedRestaurants = resData.getStoredRestaurnts();
+
+    storedRestaurants.sort(function(resA, resB){
+        if (
+            ( order === "asc" && resA.name > resB.name) || 
+            (order === "desc" && resB.name > resA.name)
+        ){ //정렬
+            return 1;
+        }
+        return -1;    
+    }); 
 
   res.render("restaurants", {
     numberOfRestaurants: storedRestaurants.length,
     restaurants: storedRestaurants, //ejs 단일 값을 반복문을 통해 json에서 값 가져올수있다.
+    nextOrder: nextOrder,
   }); //매개변수 1 은 템플릿파일이름 , 2는 {ejs변수 키와 값 }
 });
 
